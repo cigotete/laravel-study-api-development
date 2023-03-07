@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->text('extract');
             $table->text('body');
             $table->enum('status', [Post::BORRADOR, Post::PUBLICADO])
