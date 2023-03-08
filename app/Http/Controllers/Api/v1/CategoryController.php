@@ -43,7 +43,10 @@ class CategoryController extends Controller
     public function show($id)
     {
         try {
-            return Category::findOrFail($id);
+            // Get relation with post's tags and user's post.
+            return Category::with('posts.tags', 'posts.user')->findOrFail($id);
+            // Get relation with post.
+            //return Category::with('posts')->findOrFail($id);
             //return $category; // Uses of Model Binding implies model as parameter.
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred'], 500);
