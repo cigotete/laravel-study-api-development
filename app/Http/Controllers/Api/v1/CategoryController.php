@@ -44,7 +44,7 @@ class CategoryController extends Controller
     {
         try {
             // Get relation with post's tags and user's post.
-            return Category::with('posts.tags', 'posts.user')->findOrFail($id);
+            return Category::included()->findOrFail($id);
             // Get relation with post.
             //return Category::with('posts')->findOrFail($id);
             //return $category; // Uses of Model Binding implies model as parameter.
