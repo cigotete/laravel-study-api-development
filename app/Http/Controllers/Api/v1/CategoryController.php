@@ -34,7 +34,7 @@ class CategoryController extends Controller
             ]);
 
             $category = Category::create($request->all());
-            return $category;
+            return CategoryResource::make($category);
 
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred'], 500);
@@ -72,9 +72,7 @@ class CategoryController extends Controller
             ]);
             $category->update($request->all());
 
-            return response()->json([
-                'message' => 'Model updated successfully'
-            ]);
+            return CategoryResource::make($category);
 
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred'], 500);
@@ -91,9 +89,7 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             $category->delete($id);
 
-            return response()->json([
-                'message' => 'Model deleted successfully'
-            ]);
+            return CategoryResource::make($category);
 
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred'], 500);
