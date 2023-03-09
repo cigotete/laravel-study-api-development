@@ -38,6 +38,9 @@ class PostController extends Controller
             ]);
 
             $post = Post::create($request->all());
+            $tagsId = $request->input('tags_id');
+            $tagsId = json_decode($tagsId, true);
+            $post->tags()->sync($tagsId);
             return PostResource::make($post);
 
         } catch (\Exception $e) {
@@ -74,6 +77,9 @@ class PostController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
         $post->update($request->all());
+        $tagsId = $request->input('tags_id');
+        $tagsId = json_decode($tagsId, true);
+        $post->tags()->sync($tagsId);
 
         return PostResource::make($post);
     }
