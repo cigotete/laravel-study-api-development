@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -17,7 +18,7 @@ class CategoryController extends Controller
                         ->filter()
                         ->sort()
                         ->getOrPaginate();
-        return $categories;
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -47,7 +48,8 @@ class CategoryController extends Controller
     {
         try {
             // Get relation with post's tags and user's post.
-            return Category::included()->findOrFail($id);
+            $category = Category::included()->findOrFail($id);
+            return CategoryResource::make($category);
             // Get relation with post.
             //return Category::with('posts')->findOrFail($id);
             //return $category; // Uses of Model Binding implies model as parameter.
