@@ -33,7 +33,7 @@ class PostController extends Controller
     {
         try {
 
-            $request->validate([
+            $data = $request->validate([
                 'name' => 'required|max:255',
                 'slug' => 'required|max:255|unique:posts',
                 'extract' => 'required',
@@ -41,8 +41,10 @@ class PostController extends Controller
                 'category_id' => 'required|exists:categories,id',
                 'user_id' => 'required|exists:users,id',
             ]);
+            $user = auth()->user();
+            $data['user_id'] = $user->id;
 
-            $post = Post::create($request->all());
+            $post = Post::create($data);
             $tagsId = $request->input('tags_id');
             $tagsId = json_decode($tagsId, true);
             $post->tags()->sync($tagsId);
