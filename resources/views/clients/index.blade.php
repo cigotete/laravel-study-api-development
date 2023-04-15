@@ -10,6 +10,56 @@
 
         <x-container class="py-8">
 
+        {{-- Show clients --}}
+            <x-form-section v-if="clients.length > 0">
+
+                <x-slot name="title">
+                    Client list
+                </x-slot>
+
+                <x-slot name="description">
+                    Clients you added:
+                </x-slot>
+
+                <div>
+
+                    <table class="text-gray-600">
+                        <thead class="border-b border-gray-300">
+                            <tr class="text-left">
+                                <th class="py-2 w-full">Name</th>
+                                <th class="py-2">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="divide-y divide-gray-300">
+                            <tr v-for="client in clients">
+                                <td class="py-2">
+                                    @{{ client . name }}
+                                </td>
+
+                                <td class="flex divide-x divide-gray-300 py-2">
+                                    <a v-on:click="show(client)" class="pr-2 hover:text-green-600 font-semibold cursor-pointer">
+                                        Show
+                                    </a>
+
+                                    <a v-on:click="edit(client)" class="px-2 hover:text-blue-600 font-semibold cursor-pointer">
+                                        Edit
+                                    </a>
+
+                                    <a class="pl-2 hover:text-red-600 font-semibold cursor-pointer"
+                                        v-on:click="destroy(client)">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+            </x-form-section>
+
             {{-- Create clients --}}
             <x-form-section class="mb-12">
 
@@ -72,6 +122,7 @@
             createApp ({
                 data() {
                     return {
+                        clients: [],
                         createForm: {
                             disabled: false,
                             errors: [],
@@ -80,8 +131,17 @@
                         }
                     }
                 },
-
+                mounted() {
+                    this.getClients();
+                },
                 methods: {
+                    getClients() {
+                        axios.get('/oauth/clients')
+                            .then(response => {
+                                this.clients = response.data
+                            });
+                    },
+
                     store() {
 
                         this.createForm.disabled = true;
@@ -98,6 +158,7 @@
                                     'success'
                                 );
 
+                                this.getClients();
                                 this.createForm.disabled = false;
 
                             }).catch(error => {
